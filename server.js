@@ -1,8 +1,12 @@
 const express = require('express');
 const mysql = require('mysql2');
+const cors = require('cors');
 
 const app = express();
+
+app.use(cors());
 app.use(express.json());
+
 
 // MySQL connection
 const db = mysql.createConnection({
@@ -43,6 +47,7 @@ app.post('/students', (req, res) => {
     });
 });
 app.post('/logs', (req, res) => {
+    console.log(req.body);
     const { student_id, study_hours, sleep_hours, mood } = req.body;
 
     const sql = `
@@ -97,6 +102,84 @@ app.get('/logs/:id', (req, res) => {
             console.log(err);
             return res.send("Error fetching logs ❌");
         }
+        res.json(results);
+    });
+});
+const path = require('path');
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.post('/time-blocks', (req, res) => {
+    const {
+        student_id,
+        date,
+        start_time,
+        end_time,
+        activity,
+        focus_level,
+        place
+    } = req.body;
+
+    // Step 1: Check for overlap
+    const checkSql = `
+        SELECT * FROM time_blocks
+        WHERE student_id = ?
+        AND date = ?
+        AND (
+            (start_time < ? AND end_time > ?)
+        )
+    `;
+
+    db.query(checkSql, [student_id, date, end_time, start_time], (err, results) => {
+        if (err) {
+            console.log(err);
+            return res.send("Error checking overlap ❌");
+        }
+
+        if (results.length > 0) {
+            return res.send("Time block overlaps with existing block ❌");
+        }
+
+        // Step 2: Insert if no overlap
+        const insertSql = `
+            INSERT INTO time_blocks
+            (student_id, date, start_time, end_time, activity, focus_level, place)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        db.query(insertSql, [
+            student_id,
+            date,
+            start_time,
+            end_time,
+            activity,
+            focus_level,
+            place
+        ], (err, result) => {
+            if (err) {
+                console.log(err);
+                return res.send("Error inserting block ❌");
+            }
+
+            res.send("Time block created successfully ✅");
+        });
+    });
+});
+app.get('/time-blocks/:student_id/:date', (req, res) => {
+    const { student_id, date } = req.params;
+
+    const sql = `
+        SELECT * FROM time_blocks
+        WHERE student_id = ? AND date = ?
+        ORDER BY start_time ASC
+    `;
+
+    db.query(sql, [student_id, date], (err, results) => {
+        if (err) {
+            console.log(err);
+            return res.send("Error fetching blocks ❌");
+        }
+
         res.json(results);
     });
 });
