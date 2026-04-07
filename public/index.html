@@ -8,46 +8,137 @@
 
 <body>
 
-  <div class="app">
+<div class="app">
 
-    <!-- LEFT SIDEBAR -->
-    <aside class="sidebar">
-      <h2>Calendar</h2>
-      <div id="calendar"></div>
-    </aside>
+  <aside class="sidebar">
+  <h2>Calendar</h2>
+  <div id="calendar"></div>
 
-    <!-- MAIN CONTENT -->
-    <main class="main">
+  <!-- DIVIDER -->
+  <div class="divider"></div>
 
-      <!-- Top Bar -->
+  <!-- TODAY SUMMARY -->
+  <div class="sidebar-section">
+    <h3>Today</h3>
+    <p>Focus: <span id="focusTime">0h</span></p>
+    <p>Break: <span id="breakTime">0h</span></p>
+    <p>Burnout: <span id="burnoutLevel">Low</span></p>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="divider"></div>
+
+  <!-- WEEKLY ACTIVITY -->
+  <div class="sidebar-section">
+    <h3>This Week</h3>
+    <div class="week-bars">
+      <div class="bar" style="height:30%"></div>
+      <div class="bar" style="height:50%"></div>
+      <div class="bar" style="height:70%"></div>
+      <div class="bar" style="height:40%"></div>
+      <div class="bar" style="height:80%"></div>
+      <div class="bar" style="height:60%"></div>
+      <div class="bar" style="height:20%"></div>
+    </div>
+  </div>
+
+</aside>
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- TOP NAV -->
+    <div class="top-nav">
+      <button class="tab active" onclick="showPage('dashboard')">Dashboard</button>
+      <button class="tab" onclick="showPage('insights')">Insights</button>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div id="dashboardPage">
+
+      <!-- HEADER -->
       <div class="top-bar">
-        <h1 id="selectedDate">April 7, 2026</h1>
+        <h1 id="selectedDate">April 11, 2026</h1>
         <div class="score">Burnout Score: 0</div>
       </div>
 
-      <!-- Mood Section -->
-      <div class="inputs">
-        <button>Focused</button>
-        <button>Neutral</button>
-        <button>Stressed</button>
-        <button>Exhausted</button>
+      <!-- TIMELINE -->
+      <div class="timeline-container">
+
+        <div class="time-labels" id="timeLabels"></div>
+
+        <div class="timeline-wrapper" id="timelineWrapper"></div>
+
       </div>
 
-      <!-- Timeline Section -->
-      <div class="timeline-wrapper">
-        
+      <!-- DAILY INSIGHTS -->
+      <div class="insights">
+        <div class="insight-card">
+          <h3>Focus Time</h3>
+          <p>0 hrs</p>
+        </div>
+        <div class="insight-card">
+          <h3>Break Time</h3>
+          <p>0 hrs</p>
+        </div>
+        <div class="insight-card">
+          <h3>Burnout Level</h3>
+          <p>Low</p>
+        </div>
       </div>
 
-      <!-- Stats Section -->
-      <div class="stats">
-        <div class="card">Sleep</div>
-        <div class="card">Work</div>
-        <div class="card">Screen Time</div>
+    </div>
+
+    <!-- INSIGHTS PAGE -->
+    <div id="insightsPage" style="display:none;">
+      <h2>Weekly Insights</h2>
+      <div class="insights">
+        <div class="insight-card">Productivity Trends</div>
+        <div class="insight-card">Location Analysis</div>
+        <div class="insight-card">Burnout Patterns</div>
       </div>
+    </div>
 
-    </main>
+  </main>
 
-  </div>
+</div>
+
 <script src="script.js"></script>
+<div id="taskPopup" class="task-popup hidden">
+
+  <div class="popup-section">
+    <p>Activity</p>
+    <div class="options" id="activityOptions">
+      <button>Study</button>
+      <button>Coding</button>
+      <button>Break</button>
+      <button>Sleep</button>
+      <button>Social</button>
+      <button>Workout</button>
+    </div>
+  </div>
+
+  <div class="popup-section">
+    <p>Focus</p>
+    <div class="options" id="focusOptions">
+      <button>1</button>
+      <button>2</button>
+      <button>3</button>
+      <button>4</button>
+      <button>5</button>
+    </div>
+  </div>
+
+  <div class="popup-section">
+    <p>Location</p>
+    <div class="options" id="locationOptions">
+      <button>Home</button>
+      <button>College</button>
+      <button>Library</button>
+    </div>
+  </div>
+
+  <button id="saveBtn" class="save-btn">Save</button>
+
+</div>
 </body>
 </html>
