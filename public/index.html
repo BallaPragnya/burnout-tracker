@@ -1,12 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Burnout Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
 <body>
 
-    <h1>📅 Daily Timeline</h1>
+  <div class="app">
 
-    <input type="date" id="datePicker">
-    <button onclick="loadBlocks()">Load Day</button>
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <h2>Calendar</h2>
+      <div id="calendar"></div>
+    </aside>
 
-    <div id="timeline"></div>
+    <!-- MAIN CONTENT -->
+    <main class="main">
 
-    <script src="script.js"></script>
+      <!-- Top Bar -->
+      <div class="top-bar">
+        <h1 id="selectedDate">April 7, 2026</h1>
+        <div class="score">Burnout Score: 0</div>
+      </div>
 
+      <!-- Mood Section -->
+      <div class="inputs">
+        <button>Focused</button>
+        <button>Neutral</button>
+        <button>Stressed</button>
+        <button>Exhausted</button>
+      </div>
+
+      <!-- Timeline Section -->
+      <div class="timeline-wrapper">
+        
+      </div>
+
+      <!-- Stats Section -->
+      <div class="stats">
+        <div class="card">Sleep</div>
+        <div class="card">Work</div>
+        <div class="card">Screen Time</div>
+      </div>
+
+    </main>
+
+  </div>
+<script src="script.js"></script>
 </body>
+</html>

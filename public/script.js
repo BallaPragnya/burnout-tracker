@@ -1,55 +1,69 @@
-async function loadBlocks() {
-    const date = document.getElementById('datePicker').value;
+const calendar = document.getElementById("calendar");
 
-    const res = await fetch(`http://localhost:3000/time-blocks/1/${date}`);
-    const blocks = await res.json();
+function generateCalendar() {
+  const daysInMonth = 30; // keep simple for now
+  calendar.innerHTML = "";
 
-    const timeline = document.getElementById('timeline');
-    timeline.innerHTML = "";
+  for (let i = 1; i <= daysInMonth; i++) {
+    const day = document.createElement("div");
+    day.classList.add("day");
+    day.innerText = i;
 
-    // Draw hour labels
-    for (let i = 0; i < 24; i++) {
-        const label = document.createElement('div');
-        label.className = 'time-label';
-        label.style.top = `${i * 50}px`;
-        label.innerText = `${i}:00`;
-        timeline.appendChild(label);
-    }
+    day.addEventListener("click", () => {
+      document.querySelectorAll(".day").forEach(d => d.classList.remove("active"));
+      day.classList.add("active");
 
-    // Draw blocks
-    blocks.forEach(block => {
-        const start = timeToPixels(block.start_time);
-        const end = timeToPixels(block.end_time);
-
-        const div = document.createElement('div');
-        div.className = 'block';
-
-        div.style.top = `${start}px`;
-        div.style.height = `${end - start}px`;
-
-        div.style.backgroundColor = getColor(block.activity);
-
-        div.innerText = `${block.activity} (F:${block.focus_level})`;
-
-        timeline.appendChild(div);
+      document.getElementById("selectedDate").innerText = `April ${i}, 2026`;
     });
+
+    calendar.appendChild(day);
+  }
 }
 
-// Convert time → pixels
-function timeToPixels(time) {
-    const [h, m] = time.split(':');
-    return (parseInt(h) * 60 + parseInt(m)) * (50 / 60);
-}
+generateCalendar();
+const timeline = document.getElementById("timelineWrapper");
 
-// Color coding
-function getColor(activity) {
-    const colors = {
-        coding: "#4CAF50",
-        studying: "#2196F3",
-        sleep: "#9C27B0",
-        social: "#F44336",
-        break: "#FF9800"
-    };
+let isDragging = false;
+let startY = 0;
+let preview = null;
 
-    return colors[activity] || "#607D8B";
-}
+const HOUR_HEIGHT = 50; // flexible scale
+
+timeline.addEventListener("mousedown", (e) => {
+  isDragging = true;
+
+  const rect = timeline.getBoundingClientRect();
+  startY = e.clientY - rect.top;
+
+  // create preview box
+  preview = document.createElement("div");
+  preview.classList.add("preview");
+  preview.style.top = startY + "px";
+  preview.style.height = "0px";
+
+  timeline.appendChild(preview);
+});
+
+timeline.addEventListener("mousemove", (e) => {
+  if (!isDragging || !preview) return;
+
+  const rect = timeline.getBoundingClientRect();
+  let currentY = e.clientY - rect.top;
+
+  let height = currentY - startY;
+
+  if (height < 0) {
+    preview.style.top = currentY + "px";
+    preview.style.height = Math.abs(height) + "px";
+  } else {
+    preview.style.height = height + "px";
+  }
+});
+
+document.addEventListener("mouseup", () => {
+  if (!isDragging) return;
+
+  isDragging = false;
+
+  // Keep preview for now (next step will convert it to real block)
+});
